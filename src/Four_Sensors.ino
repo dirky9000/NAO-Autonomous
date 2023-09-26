@@ -1,12 +1,12 @@
 // Define the pins for the four HC-SR04 sensors
-const int sensor1TrigPin = 0;
-const int sensor1EchoPin = 1;
-const int sensor2TrigPin = 2;
-const int sensor2EchoPin = 3;
-const int sensor3TrigPin = 4;
-const int sensor3EchoPin = 5;
-const int sensor4TrigPin = 6;
-const int sensor4EchoPin = 7;
+const int sensor1TrigPin = 2;
+const int sensor1EchoPin = 3;
+const int sensor2TrigPin = 4;
+const int sensor2EchoPin = 5;
+const int sensor3TrigPin = 6;
+const int sensor3EchoPin = 7;
+const int sensor4TrigPin = 8;
+const int sensor4EchoPin = 9;
 
 void setup() {
   Serial.begin(9600);
