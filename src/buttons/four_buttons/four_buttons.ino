@@ -46,7 +46,7 @@ void setup()
 
   pinMode(LED_BUILTIN, OUTPUT);                 // Set the onboard LED as an output
 
-  digitalWrite(LED_BUILTIN, HIGH);              // Turn on the onboard LED initially
+  digitalWrite(LED_BUILTIN, HIGH);              // Turn off the onboard LED initially
   digitalWrite(externalLEDPinRed, LOW);         // Turn off the external red LED initially
   digitalWrite(externalLEDPinBlue, LOW);        // Turn off the external blue LED initially
   digitalWrite(externalLEDPinGreen, LOW);       // Turn off the external green LED initially
@@ -63,45 +63,45 @@ void loop()
   if (switchStateRed == HIGH && switchStateBlue == HIGH && switchStateGreen == HIGH && switchStateYellow == HIGH) 
   {
     // No switch is pressed
-    digitalWrite(LED_BUILTIN, LOW);             // Turn off the onboard LED
-    digitalWrite(externalLEDPinRed, HIGH);      // Turn off the external red LED
-    digitalWrite(externalLEDPinBlue, HIGH);     // Turn off the external blue LED
-    digitalWrite(externalLEDPinGreen, HIGH);    // Turn off the external green LED
-    digitalWrite(externalLEDPinYellow, HIGH);   // Turn off the external yellow LED
+    digitalWrite(LED_BUILTIN, LOW);             
+    digitalWrite(externalLEDPinRed, HIGH);      
+    digitalWrite(externalLEDPinBlue, HIGH);     
+    digitalWrite(externalLEDPinGreen, HIGH);    
+    digitalWrite(externalLEDPinYellow, HIGH);   
   } 
   else if (switchStateRed == HIGH) 
   {
     // Red switch is pressed
-    digitalWrite(LED_BUILTIN, HIGH);            // Turn on the onboard LED
-    digitalWrite(externalLEDPinRed, HIGH);      // Turn on the external red LED
-    digitalWrite(externalLEDPinBlue, LOW);      // Turn off the external blue LED
+    digitalWrite(LED_BUILTIN, HIGH);            
+    digitalWrite(externalLEDPinRed, HIGH);      
+    digitalWrite(externalLEDPinBlue, LOW);      
     digitalWrite(externalLEDPinGreen, LOW);
     digitalWrite(externalLEDPinYellow, LOW);
   } 
   else if (switchStateBlue == HIGH) 
   {
     // Blue switch is pressed
-    digitalWrite(LED_BUILTIN, HIGH);            // Turn on the onboard LED
-    digitalWrite(externalLEDPinRed, LOW);       // Turn off the external red LED
-    digitalWrite(externalLEDPinBlue, HIGH);     // Turn on the external blue LED
+    digitalWrite(LED_BUILTIN, HIGH);           
+    digitalWrite(externalLEDPinRed, LOW);      
+    digitalWrite(externalLEDPinBlue, HIGH);   
     digitalWrite(externalLEDPinGreen, LOW);
     digitalWrite(externalLEDPinYellow, LOW);
   } 
   else if (switchStateGreen == HIGH) 
   {
     // Green switch is pressed
-    digitalWrite(LED_BUILTIN, HIGH);            // Turn on the onboard LED
-    digitalWrite(externalLEDPinRed, LOW);       // Turn off the external red LED
-    digitalWrite(externalLEDPinBlue, LOW);      // Turn on the external blue LED
+    digitalWrite(LED_BUILTIN, HIGH);            
+    digitalWrite(externalLEDPinRed, LOW);       
+    digitalWrite(externalLEDPinBlue, LOW);      
     digitalWrite(externalLEDPinGreen, HIGH);
     digitalWrite(externalLEDPinYellow, LOW);
   } 
   else if (switchStateYellow == HIGH) 
   {
     // Yellow switch is pressed
-    digitalWrite(LED_BUILTIN, HIGH);            // Turn on the onboard LED
-    digitalWrite(externalLEDPinRed, LOW);       // Turn off the external red LED
-    digitalWrite(externalLEDPinBlue, LOW);      // Turn on the external blue LED
+    digitalWrite(LED_BUILTIN, HIGH);            
+    digitalWrite(externalLEDPinRed, LOW);      
+    digitalWrite(externalLEDPinBlue, LOW);    
     digitalWrite(externalLEDPinGreen, LOW);
     digitalWrite(externalLEDPinYellow, HIGH);
   }
