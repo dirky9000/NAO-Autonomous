@@ -3,24 +3,24 @@
 // POS LED to arduino 5V 
 // NEG LED to arduino digital pin 3
 
-const int switchPinRed = 2;        // Digital pin connected to the red microswitch
-const int externalLEDPinRed = 3;   // Digital pin connected to the external red LED
+const int switchPinRed = 2;                    // Digital pin connected to the red microswitch
+const int externalLEDPinRed = 3;               // Digital pin connected to the external red LED
 
 // COM to arduino GND 
 // NO to arduino digital pin 4
 // POS LED to arduino 5V 
 // NEG LED to arduino digital pin 5
 
-const int switchPinBlue = 4;       // Digital pin connected to the blue microswitch
-const int externalLEDPinBlue = 5;  // Digital pin connected to the external blue LED
+const int switchPinBlue = 4;                    // Digital pin connected to the blue microswitch
+const int externalLEDPinBlue = 5;               // Digital pin connected to the external blue LED
 
 // COM to arduino GND 
 // NO to arduino digital pin 6
 // POS LED to arduino 5V t
 // NEG LED to arduino digital pin 7
 
-const int switchPinGreen = 6;      // Digital pin connected to the green microswitch
-const int externalLEDPinGreen = 7; // Digital pin connected to the external green LED
+const int switchPinGreen = 6;                   // Digital pin connected to the green microswitch
+const int externalLEDPinGreen = 7;              // Digital pin connected to the external green LED
 
 // COM to arduino GND 
 // NO to arduino digital pin 8
