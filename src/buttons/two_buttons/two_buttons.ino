@@ -28,21 +28,27 @@ void setup() {
   digitalWrite(externalLEDPinBlue, LOW);   // Turn off the external blue LED initially
 }
 
-void loop() {
+void loop() 
+{
   int switchStateRed = digitalRead(switchPinRed);
   int switchStateBlue = digitalRead(switchPinBlue);
 
-  if (switchStateRed == HIGH && switchStateBlue == HIGH) {
+  if (switchStateRed == HIGH && switchStateBlue == HIGH) 
+  {
     // No switch is pressed
     digitalWrite(LED_BUILTIN, LOW);          // Turn off the onboard LED
     digitalWrite(externalLEDPinRed, HIGH);    // Turn off the external red LED
     digitalWrite(externalLEDPinBlue, HIGH);   // Turn off the external blue LED
-  } else if (switchStateRed == HIGH) {
+  } 
+  else if (switchStateRed == HIGH) 
+  {
     // Red switch is pressed
     digitalWrite(LED_BUILTIN, HIGH);           // Turn on the onboard LED
     digitalWrite(externalLEDPinRed, HIGH);   // Turn on the external red LED
     digitalWrite(externalLEDPinBlue, LOW);   // Turn off the external blue LED
-  } else if (switchStateBlue == HIGH) {
+  } 
+  else if (switchStateBlue == HIGH) 
+  {
     // Blue switch is pressed
     digitalWrite(LED_BUILTIN, HIGH);           // Turn on the onboard LED
     digitalWrite(externalLEDPinRed, LOW);    // Turn off the external red LED
