@@ -13,38 +13,20 @@ void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
 }
 
+void handleButton(int buttonPin, const char* buttonName) {
+  if (digitalRead(buttonPin) == HIGH) {
+    delay(10);
+    Serial.print(buttonName);
+    Serial.println(" Button Pressed");
+    while (digitalRead(buttonPin) == HIGH) {}
+    delay(10);
+    digitalWrite(LED_BUILTIN,LOW);
+  }
+}
+
 void loop() {
-  
-  if (digitalRead(white_button) == HIGH) {
-    delay(10);
-    Serial.println("White Button Pressed");
-    digitalWrite(LED_BUILTIN,HIGH);
-    while (digitalRead(white_button) == HIGH){}
-    delay(10);
-    digitalWrite(LED_BUILTIN,LOW);
-  }
-  if (digitalRead(blue_button) == HIGH) {
-    delay(10);
-    Serial.println("Blue Button Pressed");
-    digitalWrite(LED_BUILTIN,HIGH);
-    while (digitalRead(blue_button) == HIGH){}
-    delay(10);
-    digitalWrite(LED_BUILTIN,LOW);
-  }
-  if (digitalRead(red_button) == HIGH) {
-    delay(10);
-    Serial.println("Red Button Pressed");
-    digitalWrite(LED_BUILTIN,HIGH);
-    while (digitalRead(red_button) == HIGH){}
-    delay(10);
-    digitalWrite(LED_BUILTIN,LOW);
-  }
-  if (digitalRead(green_button) == HIGH) {
-    delay(10);
-    Serial.println("Green Button Pressed");
-    digitalWrite(LED_BUILTIN,HIGH);
-    while (digitalRead(green_button) == HIGH){}
-    delay(10);
-    digitalWrite(LED_BUILTIN,LOW);
-  }
+  handleButton(white_button, "White");
+  handleButton(blue_button, "Blue");
+  handleButton(red_button, "Red");
+  handleButton(green_button, "Green");
 }
