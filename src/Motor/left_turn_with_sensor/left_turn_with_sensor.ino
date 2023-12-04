@@ -8,8 +8,8 @@
 #define BTNL 3 // Pin for the left button
 
 // Sensor pins
-#define trigPin 4 // Pin for sensor trigger
-#define echoPin 5 // Pin for sensor echo
+#define trigPin 30 // Pin for sensor trigger
+#define echoPin 31 // Pin for sensor echo
 
 int stepCount = 0; // Keeps track of steps taken 
 float distanceCM;  // Declare distanceCM as a global variable
