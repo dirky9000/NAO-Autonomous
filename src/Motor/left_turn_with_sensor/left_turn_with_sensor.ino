@@ -1,43 +1,25 @@
-// 1st define some constants if needed #define CNAME value
-// 2nd setup your program, if you want serial plot, use Serial.begin(9600). Configuring pins with pinMode(Pin,Mode)
-// 3rd Loop logic always loops through the program, if you want a loop with conditions, use while or for loops
-// 4th To control the pins, use digitalWrite(Pin,state), digitalRead(Pin)
-
 // Assign pins to enable, direction, pulse
-#define DIR 9
-#define PUL 10
-#define STEPS 400
+#define DIR 9 // Direction pin for the motor
+#define PUL 10 // Pulse pin for the motor 
+#define STEPS 400 // Number of steps for a full revolution
 // Changes speed of wheel turning
-#define HALFPERIODTIME 1.5
-#define BTNR 2
-#define BTNL 3
+#define HALFPERIODTIME 1.5 // Time for each half period of the pulse
+#define BTNR 2 // Pin for the right button
+#define BTNL 3 // Pin for the left button
 
 // Sensor pins
-#define trigPin 4
-#define echoPin 5
+#define trigPin 4 // Pin for sensor trigger
+#define echoPin 5 // Pin for sensor echo
 
-int stepCount = 0;
+int stepCount = 0; // Keeps track of steps taken 
+float distanceCM;  // Declare distanceCM as a global variable
+bool isTurning = false; // Specifies if wheel is currently turning
+bool hasTurned = false;  // Variable to track whether the wheel has already turned
 
-void setup() {
-  Serial.begin(9600);
 
-  // Pin mode: Input, output, alternate function
-  // Pin mode for motor control
-  pinMode(DIR, OUTPUT);
-  pinMode(PUL, OUTPUT);
-
-  // Pin mode for button control
-  pinMode(BTNR, INPUT);
-  pinMode(BTNL, INPUT);
-
-  // For sensors
-  pinMode(trigPin, OUTPUT);
-  pinMode(echoPin, INPUT);
-}
-
-void loop() {
-
-  // Continuously measure the distance
+// Function to measure distance using sensor
+void measureDistance() {
+  // Measure the distance
   digitalWrite(trigPin, HIGH);
   delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
@@ -46,35 +28,78 @@ void loop() {
   long duration = pulseIn(echoPin, HIGH);
 
   // Calculate distance in centimeters
-  // Speed of sound in air at 20°C is approximately 343 meters per second
-  // Divide by 2 because the sound travels to the object and back
-  float distanceCM = duration * 0.0343 / 2;
+  distanceCM = duration * 0.0343 / 2;
 
   // Print the distance to the serial monitor
   Serial.print("Distance: ");
   Serial.print(distanceCM);
   Serial.println(" cm");
+}
 
-  // checks if measured distance is above 39cm 
-  if(distanceCM > 39){
-    delay(10); 
-    stepCount = 0; // resets step count for turning 
-    digitalWrite(DIR, HIGH); // sets direction to go left 
-    
-    // begin loop to turn left when distance is aboce 39cm
-    while(distanceCM > 39){
-      // if stepCount is less than or equal to 100 turn left
-      if(stepCount <= 400){
-        // do one revolution counterclockwise (LOW)
-        delay(HALFPERIODTIME);
-        digitalWrite(PUL, HIGH);
-        delay(HALFPERIODTIME);
-        digitalWrite(PUL, LOW);
-        stepCount++;
-      }
+// Setup function when the program starts 
+void setup() {
+  Serial.begin(9600); // Serial communication
+
+  // Pin modes for motor, button, and sensors 
+  pinMode(DIR, OUTPUT);
+  pinMode(PUL, OUTPUT);
+  pinMode(BTNR, INPUT);
+  pinMode(BTNL, INPUT);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+}
+
+// Main loop function runs repeatedly
+void loop() {
+  // Function continuously measure the distance
+  measureDistance();
+
+  // Check if the wheel needs to turn and hasn't turned yet
+  if (distanceCM < 39 && !isTurning && !hasTurned) {
+    isTurning = true;  // Set the flag to indicate turning
+
+    // Reset step count for turning
+    stepCount = 0;
+
+    // Set direction to go left
+    digitalWrite(DIR, HIGH);
+
+    // Begin loop to turn left when distance is above 39cm
+    while (stepCount <= 400) {
+      // Do one revolution counterclockwise (LOW)
+      delay(HALFPERIODTIME);
+      digitalWrite(PUL, HIGH);
+      delay(HALFPERIODTIME);
+      digitalWrite(PUL, LOW);
+      stepCount++;
     }
+
+    hasTurned = true; // Set the flag to indicate that the wheel has turned
+    isTurning = false;  // Reset the flag after turning is complete
   }
-  // delay between measurements 
+
+  // Check if the wheel needs to go back to the middle and has turned left
+  if (distanceCM > 39 && hasTurned) {
+    isTurning = true;  // Set the flag to indicate turning
+
+    // Set direction to go right (back to the middle)
+    digitalWrite(DIR, LOW);
+
+    // Begin loop to turn right until it reaches the middle
+    for (int i = 0; i <= stepCount; i++) {
+      delay(HALFPERIODTIME);
+      digitalWrite(PUL, HIGH);
+      delay(HALFPERIODTIME);
+      digitalWrite(PUL, LOW);
+    }
+
+    // Reset the flags and step count after returning to the middle
+    hasTurned = false;
+    isTurning = false;
+    stepCount = 0;
+  }
+
+  // Delay between measurements
   delay(500);
 
   // Check if button right is pushed

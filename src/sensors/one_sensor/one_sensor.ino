@@ -1,6 +1,6 @@
 // Define the pins for the HC-SR04 sensor
-const int trigPin = 2;
-const int echoPin = 3;
+const int trigPin = 4;
+const int echoPin = 5;
 const int ledPin = 13;  // The onboard LED (pin 13)
 
 void setup() {
