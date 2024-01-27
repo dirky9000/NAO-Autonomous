@@ -14,6 +14,25 @@ void setup() {
   pinMode(sensor2EchoPin, INPUT);
 }
 
+long measureDistance(int trigPin, int echoPin) {
+  // Trigger the sensor
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  // Measure the echo duration
+  long duration = pulseIn(echoPin, HIGH);
+
+  // Calculate distance in centimeters
+  // Speed of sound in air at 20°C is approximately 343 meters per second
+  // Divide by 2 because the sound travels to the object and back
+  long distanceCM = duration * 0.0343 / 2;
+
+  return distanceCM;
+}
+
 void loop() {
   // Measure distance from sensor 1
   long distance1 = measureDistance(sensor1TrigPin, sensor1EchoPin);
@@ -33,21 +52,3 @@ void loop() {
   delay(1000); // Adjust the delay as needed
 }
 
-long measureDistance(int trigPin, int echoPin) {
-  // Trigger the sensor
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-
-  // Measure the echo duration
-  long duration = pulseIn(echoPin, HIGH);
-
-  // Calculate distance in centimeters
-  // Speed of sound in air at 20°C is approximately 343 meters per second
-  // Divide by 2 because the sound travels to the object and back
-  long distanceCM = duration * 0.0343 / 2;
-
-  return distanceCM;
-}
