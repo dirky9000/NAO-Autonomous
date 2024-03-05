@@ -1,7 +1,10 @@
-// Motor A connections
+// Motor  connections
 int enA = 7;
 int in1 = 52;
 int in2 = 53;
+// out1 -> purple connection on motor
+// out2 -> orange connection on motor
+// Switching the outputs will cause the car to move in reverse
 
 void setup() {
   // Set all the motor control pins to outputs
@@ -15,27 +18,27 @@ void setup() {
 }
 
 void loop() {
-  directionControl();
+  driveForward();
   delay(1000);
-  speedControl();
-  delay(1000);
+  //speedControl();
+  //delay(1000);
 }
 
 // This function lets you control spinning direction of motors
-void directionControl() {
-  // Set motors to maximum speed
+void driveForward() {
+  // Set motor to half speed
   // For PWM maximum possible values are 0 to 255
-  analogWrite(enA, 255);
+  analogWrite(enA, 125);
 
-  // Turn on motor A & B
+  // Drive forwards for 3 seconds
   digitalWrite(in1, HIGH);
   digitalWrite(in2, LOW);
-  delay(2000);
+  delay(3000);
   
-  // Now change motor directions
-  digitalWrite(in1, LOW);
-  digitalWrite(in2, HIGH);
-  delay(2000);
+  // Now change motor directions for 2 seconds
+  //digitalWrite(in1, LOW);
+  //digitalWrite(in2, HIGH);
+  //delay(2000);
   
   // Turn off motors
   digitalWrite(in1, LOW);
