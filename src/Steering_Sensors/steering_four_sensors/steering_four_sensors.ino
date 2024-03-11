@@ -35,8 +35,6 @@ bool hasTurnedRight = false;  // Variable to track whether the wheel has already
 bool makeRight = false; 
 bool madeRight = false;
 bool someWait = false;
-unsigned long previousTime = 0;
-const unsigned long delayTime = 750;
 
 // Motor  connections
 int enA = 7;
@@ -110,9 +108,6 @@ void turnRight() {
 
 // This function lets you control spinning direction of motors
 void driveForward() {
-  // For PWM maximum possible values are 0 to 255
-  analogWrite(enA, 30);
-
   digitalWrite(in1, HIGH);
   digitalWrite(in2, LOW);
 }
@@ -130,16 +125,6 @@ void speedControl() {
 void loop() {
   ////////////////////////////////////////////////////////////////////////
   
-  // Drive forward unless the car has been running for more than 20 seconds
-  static unsigned long startTime = millis();
-  unsigned long currentTime = millis();
-  if (currentTime - startTime < 100000) {
-    driveForward();
-  } else {
-    // Stop the car after selected ^ seconds
-    digitalWrite(in1, LOW);
-    digitalWrite(in2, LOW);
-  }
   
   // added a delay on when the sensors start working because without, the wheel turns automatically for some reason
   static bool sensorsStart = false;
@@ -184,8 +169,12 @@ void loop() {
   
   ////////////////////////////////////////////////////////////////////////
   
-  // Check if both sensor 3 and sensor 5 meet the desired conditions
-  if ((distance3 > (desiredMeasurementSensor3 + tolerance)) && (distance5 > (desiredMeasurementSensor5 + tolerance))) {
+  // Check all conditions
+  bool condition1 = (distance3 > (desiredMeasurementSensor3 + tolerance)) && (distance5 > (desiredMeasurementSensor5 + tolerance));
+  bool condition2 = (distance2 < 150 || distance6 < 20);
+  bool condition3 = (distance2 > 150 && distance6 > 20);
+  /*
+  if (condition1) {
     // If both conditions are met, turn the wheel left
     // Reset step count for turning
     int stepCount = 0;
@@ -223,9 +212,48 @@ void loop() {
       delay(HALFPERIODTIME);
     }
   }
+  */
+  if (condition2 && !isTurningLeft && !hasTurnedLeft) {
+    // Code to turn left
+    isTurningLeft = true;  // Set the flag to indicate turning
 
+    // Reset step count for turning
+    stepCount = 0;
 
+    // Set direction to go left
+    digitalWrite(DIR, HIGH);
 
+    // Do one full turn (250 steps) counterclockwise (LOW)
+    while (stepCount <= 400) {
+        turnLeft();
+        stepCount++;
+    }
+
+    // Set the flag to indicate that the wheel has turned
+    hasTurnedLeft = true;
+
+    // Reset the flag after turning is complete
+    isTurningLeft = false;
+  }
+
+  if (condition3 && hasTurnedLeft) {    
+    // Code to return to the middle
+    isTurningLeft = true;  // Set the flag to indicate turning
+
+    // Set direction to go right (back to the middle)
+    digitalWrite(DIR, LOW);
+
+    // Begin loop to turn right until it reaches the middle
+    for (int i = 0; i <= stepCount; i++) {
+      turnRight();
+    }
+
+    // Reset the flags and step count after returning to the middle
+    hasTurnedLeft = false;
+    isTurningLeft = false;
+    makeRight = true;
+    stepCount = 0;
+  }
   
   /*
   // Check if both sensor 1 and sensor 4 meet the desired conditions
@@ -268,6 +296,8 @@ void loop() {
     }
   }
   */
+
+
 
 
   /*
@@ -351,56 +381,6 @@ void loop() {
     }
   }
   */
-
-  // Check if the wheel needs to turn and hasn't turned yet
-  if ((distance2 < 150 || distance6 < 20) && (!isTurningLeft && !hasTurnedLeft)) {
-    // Code to turn left
-    isTurningLeft = true;  // Set the flag to indicate turning
-
-    // Reset step count for turning
-    stepCount = 0;
-
-    // Set direction to go left
-    digitalWrite(DIR, HIGH);
-
-    // Do one full turn (250 steps) counterclockwise (LOW)
-    while (stepCount <= 200) {
-        turnLeft();
-        stepCount++;
-    }
-
-    // Set the flag to indicate that the wheel has turned
-    hasTurnedLeft = true;
-
-    // Reset the flag after turning is complete
-    isTurningLeft = false;
-    someWait = true;
-    previousTime = millis();
-  }
-
-  // Check if the wheel needs to go back to the middle and has turned left
-  if ((distance2 > 150 && distance6 > 20) && (hasTurnedLeft)) {
-    if (someWait && (currentTime - previousTime >= delayTime)) {
-      someWait = false;
-      
-      // Code to return to the middle
-      isTurningLeft = true;  // Set the flag to indicate turning
-
-      // Set direction to go right (back to the middle)
-      digitalWrite(DIR, LOW);
-
-      // Begin loop to turn right until it reaches the middle
-      for (int i = 0; i <= stepCount; i++) {
-        turnRight();
-      }
-
-      // Reset the flags and step count after returning to the middle
-      hasTurnedLeft = false;
-      isTurningLeft = false;
-      makeRight = true;
-      stepCount = 0;
-    }
-  }
   
   // Check if the specified conditions are met for making a right turn of 330 steps
   if (makeRight) {
@@ -613,6 +593,18 @@ void loop() {
     }
     delay(10);
   }
-  
+
+  analogWrite(enA, 1);
+  // Drive forward unless the car has been running for more than 20 seconds
+  static unsigned long startTime = millis();
+  unsigned long currentTime = millis();
+  if (currentTime - startTime < 100000) {
+    driveForward();
+  } else {
+    // Stop the car after selected ^ seconds
+    digitalWrite(in1, LOW);
+    digitalWrite(in2, LOW);
+  }
+
   delay(250);
 }
