@@ -36,6 +36,7 @@ bool makeRight = false;
 bool madeRight = false;
 bool someWait = false;
 bool nowReallign = false;
+bool goBackMiddle = false;
 
 // Motor  connections
 int enA = 7;
@@ -295,6 +296,50 @@ if (makeRight) {
     }
     nowReallign = false;
   }
+
+
+
+  if (distance3 > 250) { // Code to turn right
+    // Reset step count for turning
+    stepCount = 0;
+
+    // Set direction to go right
+    digitalWrite(DIR, LOW);
+
+    // Do one full turn (330 steps) clockwise (HIGH)
+    while (stepCount <= 400) {
+        turnRight();
+        stepCount++;
+    }
+    
+    // Get the current time
+    unsigned long startTime = millis();
+
+    // Wait for 2 second
+    while (millis() - startTime < 2000) {
+        // Keep the motors running during this time
+        driveForward();
+    }
+
+    goBackMiddle = true;
+  }
+
+  if (goBackMiddle) {    
+    // Code to return to the middle
+    goBackMiddle = false;
+
+    // Set direction to go right (back to the middle)
+    digitalWrite(DIR, HIGH);
+
+    // Begin loop to turn right until it reaches the middle
+    for (int i = 0; i <= stepCount; i++) {
+      turnRight();
+    }
+
+
+    stepCount = 0;
+  }
+
 
   ////////////////////////////////////////////////////////////////////////
   // Check if button right is pushed
