@@ -34,7 +34,6 @@ bool isTurningRight = false; // Specifies if wheel is currently turning
 bool hasTurnedRight = false;  // Variable to track whether the wheel has already turned
 bool makeRight = false; 
 bool madeRight = false;
-bool someWait = false;
 bool nowReallign = false;
 bool goBackMiddle = false;
 
@@ -118,10 +117,7 @@ void driveForward() {
 }
 
 // Main loop function runs repeatedly
-void loop() {
-  ////////////////////////////////////////////////////////////////////////
-  
-  
+void loop() {  
   // added a delay on when the sensors start working because without, the wheel turns automatically for some reason
   static bool sensorsStart = false;
 
@@ -163,14 +159,10 @@ void loop() {
   Serial.print(distance6);
   Serial.println(" cm");
   
-  ////////////////////////////////////////////////////////////////////////
-  
-  // Check all conditions
-  bool condition1 = (distance3 > (desiredMeasurementSensor3 + tolerance)) && (distance5 > (desiredMeasurementSensor5 + tolerance));
-  bool condition2 = (distance2 < 110 || distance6 < 20);
-  bool condition3 = (distance2 > 110 && distance6 > 20);
-  
-  if (condition2 && !isTurningLeft && !hasTurnedLeft) {
+  // This is for car driving 
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // This is for front sensor (part 1)
+  if ((distance2 < 110) && (!isTurningLeft && !hasTurnedLeft)) {
     // Code to turn left
     isTurningLeft = true;  // Set the flag to indicate turning
 
@@ -193,7 +185,8 @@ void loop() {
     isTurningLeft = false;
   }
 
-  if (condition3 && hasTurnedLeft) {    
+  // This is for front sensor (part 2)
+  if ((distance2 > 110) && hasTurnedLeft) {    
     // Code to return to the middle
     isTurningLeft = true;  // Set the flag to indicate turning
 
@@ -212,8 +205,8 @@ void loop() {
     stepCount = 0;
   }
 
-// Check if the specified conditions are met for making a right turn of 330 steps
-if (makeRight) {
+  // Check if the specified conditions are met for making a right turn of 330 steps
+  if (makeRight) {
     // Code to turn right
 
     // Reset step count for turning
@@ -257,7 +250,7 @@ if (makeRight) {
       nowReallign = true;
   }
 
-  if (condition1 && nowReallign) {
+  if ((distance3 > (desiredMeasurementSensor3 + tolerance)) && (distance5 > (desiredMeasurementSensor5 + tolerance)) && nowReallign) {
     // If both conditions are met, turn the wheel left
     // Reset step count for turning
     int stepCount = 0;
@@ -297,8 +290,6 @@ if (makeRight) {
     nowReallign = false;
   }
 
-
-
   if (distance3 > 250) { // Code to turn right
     // Reset step count for turning
     stepCount = 0;
@@ -336,12 +327,11 @@ if (makeRight) {
       turnRight();
     }
 
-
     stepCount = 0;
   }
 
-
-  ////////////////////////////////////////////////////////////////////////
+  // These are for the buttons
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Check if button right is pushed
   if (digitalRead(BTNR) == HIGH) {
     delay(10);
