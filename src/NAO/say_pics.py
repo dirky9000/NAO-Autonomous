@@ -10,7 +10,8 @@ from naoqi import ALBroker
 count = 1
 period = 500
 moduleName = "pythonModule"
-NAO_IP = "192.168.1.126"  # Replace here with your NaoQi's IP address.
+NAO_IP = "192.168.1.126"  # Replace here with your NaoQi's IP address. (This is bender)
+# NAO_IP = "192.168.1.107"  # Replace here with your NaoQi's IP address. (This is peanut)
 PC_IP = "192.168.1.149"   # Replace here with your computer IP address
 PORT = 9559
 memValue = "PictureDetected" # ALMemory variable where the ALVisionRecognition module outputs its results.
@@ -21,17 +22,24 @@ class myModule(ALModule):
   def __init__(self, name):
     ALModule.__init__(self, name)
     self.last_label = None
+    self.is_speaking = False  # Add this line
 
   def pictureChanged(self, strVarName, value, strMessage):
     """callback when data change"""
+    print("Value:", value)
+    if value:
+      label = value[1][0][0][0]
+      print("Label:", label)
     print("\ndatachanged", strVarName, " ", value, " ", strMessage)
     global count
     count = count-1
     tts = ALProxy("ALTextToSpeech", NAO_IP, PORT)
-    if value:  # Check if value is not empty
+    if value and not self.is_speaking:  # Check if value is not empty and the robot is not speaking
         label = value[1][0][0][0]
         if label != self.last_label:  # Check if label has changed
+            self.is_speaking = True  # Set the flag to True before calling tts.say
             tts.say("I see a " + label)
+            self.is_speaking = False  # Set the flag back to False after tts.say has finished
             self.last_label = label  # Update last_label
 
 broker = ALBroker("pythonBroker", PC_IP,9999, NAO_IP,9559)
