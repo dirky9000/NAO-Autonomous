@@ -1,4 +1,4 @@
-# this is when the NAO is sitting down in the chair and ready to press buttons
+# this is when the NAO is sitting down in the chair and presses green button
 #######################################################################################
 import os
 import sys
@@ -125,6 +125,71 @@ keys.append([[-0.066004, [3, -0.146667, 0], [3, 0, 0]]])
 names.append("RWristYaw")
 times.append([0.44])
 keys.append([[1.77173, [3, -0.146667, 0], [3, 0, 0]]])
+
+# you need to put this everytime at end of a motion
+try:
+  motion = ALProxy("ALMotion", NAO_IP, PORT)
+  motion.angleInterpolationBezier(names, times, keys)
+except BaseException as err:
+  print(err)
+
+# move arm to right
+# time.sleep(1)
+names.append("LElbowRoll")
+times.append([1.04])
+keys.append([[-0.41874, [3, -0.346667, 0], [3, 0, 0]]])
+
+names.append("LElbowYaw")
+times.append([1.04])
+keys.append([[-1.48802, [3, -0.346667, 0], [3, 0, 0]]])
+
+names.append("LHand")
+times.append([1.04])
+keys.append([[0.0420001, [3, -0.346667, 0], [3, 0, 0]]])
+
+names.append("LShoulderPitch")
+times.append([1.04])
+keys.append([[0.500042, [3, -0.346667, 0], [3, 0, 0]]])
+
+names.append("LShoulderRoll")
+times.append([1.04])
+keys.append([[-0.303774, [3, -0.346667, 0], [3, 0, 0]]])
+
+names.append("LWristYaw")
+times.append([1.04])
+keys.append([[-1.14287, [3, -0.346667, 0], [3, 0, 0]]])
+
+# you need to put this everytime at end of a motion
+try:
+  motion = ALProxy("ALMotion", NAO_IP, PORT)
+  motion.angleInterpolationBezier(names, times, keys)
+except BaseException as err:
+  print(err)
+
+# makes the nao push down on button
+names.append("LElbowRoll")
+times.append([0.25])
+keys.append([[-0.47243, [3, -0.333333, 0], [3, 0, 0]]])
+
+names.append("LElbowYaw")
+times.append([0.25])
+keys.append([[-1.48802, [3, -0.333333, 0], [3, 0, 0]]])
+
+names.append("LHand")
+times.append([0.25])
+keys.append([[0.0420001, [3, -0.333333, 0], [3, 0, 0]]])
+
+names.append("LShoulderPitch")
+times.append([0.25])
+keys.append([[1, [3, -0.333333, 0], [3, 0, 0]]])
+
+names.append("LShoulderRoll")
+times.append([0.25])
+keys.append([[-0.282298, [3, -0.333333, 0], [3, 0, 0]]])
+
+names.append("LWristYaw")
+times.append([0.25])
+keys.append([[-1.14287, [3, -0.333333, 0], [3, 0, 0]]])
 
 # you need to put this everytime at end of a motion
 try:
