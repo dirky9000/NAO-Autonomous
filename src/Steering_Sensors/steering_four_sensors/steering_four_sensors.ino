@@ -1,3 +1,6 @@
+
+
+// No sensor 6 and also added code to be parallel 
 // Assign pins to enable, direction, pulse
 #define DIR 9 // Direction pin for the motor
 #define PUL 10 // Pulse pin for the motor 
@@ -21,7 +24,7 @@
 #define trigPin6 22 // Sensor 6 trig pin
 #define echoPin6 23 // Sensor 6 echo pin
 
-#define desiredMeasurementSensor5 35 // Distance I am using to stay parallel to the wall
+#define desiredMeasurementSensor5 40 // Distance I am using to stay parallel to the wall
 #define tolerance 10 // Car cannot be more than this, tolerance + desiredMeasurementSensor
 
 int stepCount = 0; // Keeps track of steps taken 
@@ -120,7 +123,7 @@ void loop() {
   float distance3 = measureDistance(trigPin3, echoPin3);
   float distance4 = measureDistance(trigPin4, echoPin4);
   float distance5 = measureDistance(trigPin5, echoPin5);
-  float distance6 = measureDistance(trigPin6, echoPin6);
+  //float distance6 = measureDistance(trigPin6, echoPin6);
 
   // Reads distances onto the serial monitor 
   Serial.print("Sensor 1: ");
@@ -142,12 +145,52 @@ void loop() {
   Serial.print("Sensor 5: ");
   Serial.print(distance5);
   Serial.println(" cm");
-
+  /*
   Serial.print("Sensor 6: ");
   Serial.print(distance6);
   Serial.println(" cm");
-   
+  */
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // working code to keep parallel
+  if (distance5 > (desiredMeasurementSensor5 + tolerance)) {
+    // If both conditions are met, turn the wheel left
+    // Reset step count for turning
+    int stepCount = 0;
+
+    // Set direction to go right
+    digitalWrite(DIR, LOW);
+
+    // Gradually turn the wheel until it is back in the desired range for both sensors
+    while (distance5 > (desiredMeasurementSensor5 + tolerance)) {
+      digitalWrite(PUL, HIGH); // Step
+      delay(HALFPERIODTIME);
+      digitalWrite(PUL, LOW);
+      delay(HALFPERIODTIME);
+      
+      // Update distance readings
+      distance5 = measureDistance(trigPin5, echoPin5);
+      
+      stepCount++;
+      
+      // Prevent infinite looping
+      if (stepCount > 280) {
+        break;
+      }
+    }
+
+    // Reset the flags after turning is complete
+    // Set direction to go right (back to the middle)
+    digitalWrite(DIR, HIGH);
+    // Gradually turn the wheel right until it reaches the middle
+    for (int i = 0; i <= stepCount; i++) {
+      digitalWrite(PUL, HIGH); // Step
+      delay(HALFPERIODTIME);
+      digitalWrite(PUL, LOW);
+      delay(HALFPERIODTIME);
+    }
+  }
+
+
   // If an object is in front of the car, then it makes a left around it (Sensor 2: Front)
   if ((distance2 < 110) && (!isTurningLeft && !hasTurnedLeft)) {
     isTurningLeft = true; 
@@ -343,7 +386,7 @@ void loop() {
     }
     delay(10);
   }
-
+  
   analogWrite(enA, 1);
   // Drive forward unless the car has been running for more than 20 seconds
   static unsigned long startTime = millis();
@@ -355,6 +398,6 @@ void loop() {
     digitalWrite(in1, LOW);
     digitalWrite(in2, LOW);
   }
-
+  
   delay(250);
 }
