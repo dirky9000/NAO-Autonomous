@@ -8,7 +8,6 @@ from naoqi import ALProxy
 NAO_IP = "192.168.1.126"  # Replace here with your NaoQi's IP address.
 PORT = 9559
 
-
 names = list()
 times = list()
 keys = list()

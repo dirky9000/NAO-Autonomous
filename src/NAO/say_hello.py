@@ -4,6 +4,6 @@ sys.path.append('C:/Users/dirky/AppData/Local/Programs/Python/Python27/Python_SD
 import naoqi
 from naoqi import ALProxy
 
-tts = ALProxy("ALTextToSpeech", "192.168.1.107", 9559)
+tts = ALProxy("ALTextToSpeech", "192.168.1.135", 9559)
 
 tts.say("Hello World")

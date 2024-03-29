@@ -10,10 +10,13 @@ from naoqi import ALBroker
 count = 1
 period = 500
 moduleName = "pythonModule"
-NAO_IP = "192.168.1.126"  # Replace here with your NaoQi's IP address. (This is bender)
+# NAO_IP = "192.168.1.126"  # Replace here with your NaoQi's IP address. (This is bender)
 # NAO_IP = "192.168.1.107"  # Replace here with your NaoQi's IP address. (This is peanut)
+NAO_IP = "192.168.1.135"  # Replace here with your NaoQi's IP address. (This is petrie)
 PC_IP = "192.168.1.149"   # Replace here with your computer IP address
 PORT = 9559
+
+
 memValue = "PictureDetected" # ALMemory variable where the ALVisionRecognition module outputs its results.
 
 class myModule(ALModule):
