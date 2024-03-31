@@ -1,3 +1,4 @@
+// No sensor 6 and also added code to be parallel 
 // Assign pins to enable, direction, pulse
 #define DIR 9 // Direction pin for the motor
 #define PUL 10 // Pulse pin for the motor 
@@ -21,11 +22,27 @@
 #define trigPin6 22 // Sensor 6 trig pin
 #define echoPin6 23 // Sensor 6 echo pin
 
+#define desiredMeasurementSensor3 37
+#define desiredMeasurementSensor5 35 // Distance I am using to stay parallel to the wall
+#define tolerance 10 // Car cannot be more than this, tolerance + desiredMeasurementSensor
+
 int stepCount = 0; // Keeps track of steps taken 
 bool isTurningLeft = false; // Specifies if wheel is currently turning
 bool hasTurnedLeft = false;  // Variable to track whether the wheel has already turned
 bool isTurningRight = false; // Specifies if wheel is currently turning
 bool hasTurnedRight = false;  // Variable to track whether the wheel has already turned
+bool makeRight = false; 
+bool madeRight = false;
+bool nowReallign = false;
+bool goBackMiddle = false;
+
+// Motor  connections
+int enA = 7;
+int in1 = 52;
+int in2 = 53;
+// out1 -> purple connection on motor
+// out2 -> orange connection on motor
+// Switching the outputs will cause the car to move in reverse
 
 // Setup function when the program starts 
 void setup() {
@@ -46,13 +63,21 @@ void setup() {
   pinMode(echoPin4, INPUT);
   pinMode(trigPin5, OUTPUT);
   pinMode(echoPin5, INPUT);
-  pinMode(trigPin6, OUTPUT);
-  pinMode(echoPin6, INPUT);
+  //pinMode(trigPin6, OUTPUT);
+  //pinMode(echoPin6, INPUT);
+
+  // Set all the motor control pins to outputs
+  pinMode(enA, OUTPUT);
+  pinMode(in1, OUTPUT);
+  pinMode(in2, OUTPUT);
+  
+  // Turn off motors - Initial state
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, LOW);
 }
 
 // Function to measure distance using sensor
 float measureDistance(int trigPin, int echoPin) {
-  // Measure the distance
   digitalWrite(trigPin, HIGH);
   delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
@@ -66,32 +91,40 @@ float measureDistance(int trigPin, int echoPin) {
   return distanceCM;
 }
 
-void turnLeft() {
-  delay(HALFPERIODTIME);
-  digitalWrite(PUL, HIGH);
-  delay(HALFPERIODTIME);
-  digitalWrite(PUL, LOW);
+// Allows car to drive forward 
+void driveForward() {
+  digitalWrite(in1, HIGH);
+  digitalWrite(in2, LOW);
+  //analogWrite(enA, 255);
 }
 
-void turnRight() {
+// Allows car to make turn and drive 
+void makeTurn() {
   delay(HALFPERIODTIME);
   digitalWrite(PUL, HIGH);
   delay(HALFPERIODTIME);
   digitalWrite(PUL, LOW);
+  driveForward();
 }
 
 // Main loop function runs repeatedly
-void loop() {
-  ////////////////////////////////////////////////////////////////////////
-  // Function continuously measure the distance
+void loop() {  
+  // Added a delay on when the sensors start working because without, the wheel turns automatically for some reason
+  static bool sensorsStart = false;
+  if (!sensorsStart) {
+    delay(1000);
+    sensorsStart = true;
+  }
+  
+  // Continuously measures the distance of sensors
   float distance1 = measureDistance(trigPin1, echoPin1);
   float distance2 = measureDistance(trigPin2, echoPin2);
   float distance3 = measureDistance(trigPin3, echoPin3);
   float distance4 = measureDistance(trigPin4, echoPin4);
   float distance5 = measureDistance(trigPin5, echoPin5);
-  float distance6 = measureDistance(trigPin6, echoPin6);
+  //float distance6 = measureDistance(trigPin6, echoPin6);
 
-  // Reads distnaces onto the serial monitor 
+  // Reads distances onto the serial monitor 
   Serial.print("Sensor 1: ");
   Serial.print(distance1);
   Serial.println(" cm");
@@ -111,176 +144,121 @@ void loop() {
   Serial.print("Sensor 5: ");
   Serial.print(distance5);
   Serial.println(" cm");
-
+  /*
   Serial.print("Sensor 6: ");
   Serial.print(distance6);
   Serial.println(" cm");
-  ////////////////////////////////////////////////////////////////////////
-  // Check if the wheel needs to turn and hasn't turned yet
-  if ((distance2 < 20 || distance6 < 20) && (!isTurningLeft && !hasTurnedLeft)) {
-    // Code to turn left
-    isTurningLeft = true;  // Set the flag to indicate turning
-
-    // Reset step count for turning
-    stepCount = 0;
-
-    // Set direction to go left
-    digitalWrite(DIR, HIGH);
-
-    // Begin loop to turn left when distance is above 39cm
-    while (stepCount <= 400) {
-      // Do one revolution counterclockwise (LOW)
-      turnLeft();
-      stepCount++;
-    }
-
-    hasTurnedLeft = true; // Set the flag to indicate that the wheel has turned
-    isTurningLeft = false;  // Reset the flag after turning is complete
-  }
-
-  // Check if the wheel needs to go back to the middle and has turned left
-  if ((distance2 > 20 && distance6 > 20) && (hasTurnedLeft)) {
-    // Code to return to the middle
-    isTurningLeft = true;  // Set the flag to indicate turning
-
-    // Set direction to go right (back to the middle)
-    digitalWrite(DIR, LOW);
-
-    // Begin loop to turn right until it reaches the middle
-    for (int i = 0; i <= stepCount; i++) {
-      turnRight();
-    }
-        
-    // Reset the flags and step count after returning to the middle
-    hasTurnedLeft = false;
-    isTurningLeft = false;
-    stepCount = 0;
-  }
-
-
-  /*
-  ////////////////////////////////////////////////////////////////////////
-  // Check if the wheel needs to turn and hasn't turned yet
-  if (distance2 < 20 && !isTurningLeft && !hasTurnedLeft) {
-    isTurningLeft = true;  // Set the flag to indicate turning
-
-    // Reset step count for turning
-    stepCount = 0;
-
-    // Set direction to go left
-    digitalWrite(DIR, HIGH);
-
-    // Begin loop to turn left when distance is above 39cm
-    while (stepCount <= 400) {
-      // Do one revolution counterclockwise (LOW)
-      turnLeft();
-      stepCount++;
-    }
-
-    hasTurnedLeft = true; // Set the flag to indicate that the wheel has turned
-    isTurningLeft = false;  // Reset the flag after turning is complete
-  }
-
-  // Check if the wheel needs to go back to the middle and has turned left
-  if (distance2 > 20 && hasTurnedLeft) {
-    isTurningLeft = true;  // Set the flag to indicate turning
-
-    // Set direction to go right (back to the middle)
-    digitalWrite(DIR, LOW);
-
-    // Begin loop to turn right until it reaches the middle
-    for (int i = 0; i <= stepCount; i++) {
-      turnRight();
-    }
-        
-    // Reset the flags and step count after returning to the middle
-    hasTurnedLeft = false;
-    isTurningLeft = false;
-    stepCount = 0;
-  }
-  /*
-  // If something is behind the car 
-  if (distance6 < 20 && !isTurningLeft && !hasTurnedLeft) {
-    isTurningLeft = true;  // Set the flag to indicate turning
-
-    // Reset step count for turning
-    stepCount = 0;
-
-    // Set direction to go left
-    digitalWrite(DIR, HIGH);
-
-    // Begin loop to turn left when distance is above 39cm
-    while (stepCount <= 400) {
-      // Do one revolution counterclockwise (LOW)
-      turnLeft();
-      stepCount++;
-    }
-
-    hasTurnedLeft = true; // Set the flag to indicate that the wheel has turned
-    isTurningLeft = false;  // Reset the flag after turning is complete
-  }
-
-  // Check if the wheel needs to go back to the middle and has turned left
-  if (distance6 > 20 && hasTurnedLeft) {
-    isTurningLeft = true;  // Set the flag to indicate turning
-
-    // Set direction to go right (back to the middle)
-    digitalWrite(DIR, LOW);
-
-    // Begin loop to turn right until it reaches the middle
-    for (int i = 0; i <= stepCount; i++) {
-      turnRight();
-    }
-        
-    // Reset the flags and step count after returning to the middle
-    hasTurnedLeft = false;
-    isTurningLeft = false;
-    stepCount = 0;
-  }
   */
-  // Check if the wheel needs to turn and hasn't turned yet
-  if (distance3 > 10000 && !isTurningRight && !hasTurnedRight) {
-    isTurningRight = true;  // Set the flag to indicate turning
-
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /*
+  if (distance5 > (desiredMeasurementSensor5 + tolerance)) {
+    // If both conditions are met, turn the wheel left
     // Reset step count for turning
-    stepCount = 0;
+    int stepCount = 0;
 
     // Set direction to go right
     digitalWrite(DIR, LOW);
 
-    // Begin loop to turn left when distance is above 39cm
-    while (stepCount <= 400) {
-      // Do one revolution counterclockwise (LOW)
-      turnRight();
+    // Gradually turn the wheel until it is back in the desired range for both sensors
+    while (distance5 > (desiredMeasurementSensor5 + tolerance)) {
+      makeTurn();
+      
+      // Update distance readings
+      distance3 = measureDistance(trigPin3, echoPin3);
+      distance5 = measureDistance(trigPin5, echoPin5);
+      
       stepCount++;
+      
+      // Prevent infinite looping
+      if (stepCount > 280) {
+        break;
+      }
     }
 
-    hasTurnedRight = true; // Set the flag to indicate that the wheel has turned
-    isTurningRight = false;  // Reset the flag after turning is complete
-  }
-
-  // Check if the wheel needs to go back to the middle and has turned left
-  if (distance3 < 50 && hasTurnedRight) {
-    isTurningRight = true;  // Set the flag to indicate turning
-
+    // Reset the flags after turning is complete
     // Set direction to go right (back to the middle)
     digitalWrite(DIR, HIGH);
-
-    // Begin loop to turn right until it reaches the middle
+    // Gradually turn the wheel right until it reaches the middle
     for (int i = 0; i <= stepCount; i++) {
-      turnLeft();
+      makeTurn();
+    }
+  }
+  */
+  // If an object is in front of the car, then it makes a left around it (Sensor 2: Front)
+  if ((distance2 < 150) && (!isTurningLeft && !hasTurnedLeft)) {
+    isTurningLeft = true; 
+
+    stepCount = 0;
+
+    digitalWrite(DIR, HIGH); // Set direction to go left
+
+    // higher the number = higher the angle 
+    while (stepCount <= 320) {
+        makeTurn();
+        stepCount++;
     }
 
-    // Reset the flags and step count after returning to the middle
-    hasTurnedRight = false;
-    isTurningRight = false;
-    stepCount = 0;
+    hasTurnedLeft = true;
+    isTurningLeft = false;
   }
   
-  // Delay between measurements
-  delay(500);
+  // After the car has made a left turn, it goes back middle (Sensor 2: Front)
+  if ((distance2 > 150) && hasTurnedLeft) {    
+    isTurningLeft = true;
 
-  ////////////////////////////////////////////////////////////////////////
+    digitalWrite(DIR, LOW); // Set direction to go back to middle after left turn 
+
+    // Begin loop until it reaches the middle
+    for (int i = 0; i <= stepCount; i++) {
+      makeTurn();
+    }
+
+    hasTurnedLeft = false;
+    isTurningLeft = false;
+    makeRight = true;
+    stepCount = 0;
+  }
+
+  // Allows car to make right turns into hallways (Sensor 3: Front Right)
+  if (distance3 > 250) { 
+    stepCount = 0;
+
+    digitalWrite(DIR, LOW); // Set direction to go right
+
+    // higher the number = higher the angle
+    while (stepCount <= 320) { 
+        makeTurn();
+        stepCount++;
+    }
+    
+    // Get the current time
+    unsigned long startTime = millis();
+
+    // Wait for 1 second
+    while (millis() - startTime < 1100) {
+        // Keep the motors running during this time
+        driveForward();
+    }
+
+    goBackMiddle = true;
+  }
+
+  // Allows car to go down the middle of hallway (Sensor 3: Front Right)
+  if (goBackMiddle) {    
+    goBackMiddle = false;
+
+    digitalWrite(DIR, HIGH); // Set direction to go back to middle after right turn 
+
+    // Begin loop until it reaches the middle
+    for (int i = 0; i <= stepCount; i++) {
+      makeTurn();
+    }
+
+    stepCount = 0;
+  }
+
+  // These are for the buttons
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Check if button right is pushed
   if (digitalRead(BTNR) == HIGH) {
     delay(10);
@@ -294,14 +272,14 @@ void loop() {
       // if stepCount is less than or equal to 100 turn right
       if (stepCount <= 400) {
         // do one revolution counterclockwise (LOW)
-        turnRight();
+        makeTurn();
         stepCount++;
       }
     }
     // once button is released turn back to center
     digitalWrite(DIR, HIGH);
     for (int i = 0; i <= stepCount; i++) {
-      turnLeft();
+      makeTurn();
     }
     delay(10);
   }
@@ -317,15 +295,29 @@ void loop() {
       // if stepCount is less than or equal to 100 turn left
       if (stepCount <= 400) {
         // do one revolution counterclockwise (LOW)
-        turnLeft();
+        makeTurn();
         stepCount++;
       }
     }
     // once button is released turn back to center
     digitalWrite(DIR, LOW);
     for (int i = 0; i <= stepCount; i++) {
-      turnRight();
+      makeTurn();
     }
     delay(10);
   }
+  
+  analogWrite(enA, 1);
+  // Drive forward unless the car has been running for more than 20 seconds
+  static unsigned long startTime = millis();
+  unsigned long currentTime = millis();
+  if (currentTime - startTime < 100000) {
+    driveForward();
+  } else {
+    // Stop the car after selected ^ seconds
+    digitalWrite(in1, LOW);
+    digitalWrite(in2, LOW);
+  }
+  
+  delay(250);
 }
