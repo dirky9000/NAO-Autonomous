@@ -1,0 +1,8 @@
+# Activate a Python3.11 virtual environment 
+# Upgrade pip using the following command:
+# pip install --upgrade pip
+#
+# Install packages using the following command:
+# pip install -r requirements.txt
+pygame
+neat-python
