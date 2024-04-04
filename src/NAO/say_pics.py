@@ -13,7 +13,7 @@ moduleName = "pythonModule"
 # NAO_IP = "192.168.1.126"  # Replace here with your NaoQi's IP address. (This is bender)
 # NAO_IP = "192.168.1.107"  # Replace here with your NaoQi's IP address. (This is peanut)
 NAO_IP = "192.168.1.135"  # Replace here with your NaoQi's IP address. (This is petrie)
-PC_IP = "192.168.1.149"   # Replace here with your computer IP address
+PC_IP = "192.168.1.100"   # Replace here with your computer IP address
 PORT = 9559
 
 
