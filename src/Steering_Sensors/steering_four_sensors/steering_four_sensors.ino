@@ -35,6 +35,7 @@ bool makeRight = false;
 bool madeRight = false;
 bool nowReallign = false;
 bool goBackMiddle = false;
+bool started = false;
 
 // Motor  connections
 int enA = 7;
@@ -109,6 +110,14 @@ void makeTurn() {
 
 // Main loop function runs repeatedly
 void loop() {  
+  // Program starts once NAO sends 'b' to arduino
+  if (!started) {
+    while (!Serial.available() || Serial.read() != 'b') {
+      delay(100);  
+    }
+    started = true; 
+  }
+  
   // Added a delay on when the sensors start working because without, the wheel turns automatically for some reason
   static bool sensorsStart = false;
   if (!sensorsStart) {

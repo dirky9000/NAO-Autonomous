@@ -1,9 +1,9 @@
 # this is when the NAO is sitting down in the chair and presses green button
 #######################################################################################
-import os
 import sys
-import time
 sys.path.append('C:/Users/dirky/AppData/Local/Programs/Python/Python27/Python_SDK/lib')
+import os
+import time
 import naoqi
 from naoqi import ALProxy
 from naoqi import ALModule
@@ -12,7 +12,7 @@ from naoqi import ALBroker
 # NAO_IP = "192.168.1.126"  # Replace here with your NaoQi's IP address. (This is bender)
 # NAO_IP = "192.168.1.107"  # Replace here with your NaoQi's IP address. (This is peanut)
 NAO_IP = "192.168.1.135"  # Replace here with your NaoQi's IP address. (This is petrie)
-PC_IP = "192.168.1.149"   # Replace here with your computer IP address
+PC_IP = "192.168.1.130"   # Replace here with your computer IP address
 PORT = 9559
 
 names = list()
