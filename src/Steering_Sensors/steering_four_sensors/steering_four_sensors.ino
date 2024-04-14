@@ -36,6 +36,7 @@ bool madeRight = false;
 bool nowReallign = false;
 bool goBackMiddle = false;
 bool started = false;
+bool running = true;
 
 // Motor  connections
 int enA = 7;
@@ -117,7 +118,18 @@ void loop() {
     }
     started = true; 
   }
-  
+
+  // Check if a 'g' is received to stop the program
+  if (Serial.available() > 0) {
+    if (Serial.read() == 'g') {
+      running = false;  // Set running to false when 'g' is received
+    }
+  }
+
+  // If the program is not supposed to be running, skip the rest of the loop
+  if (!running) {
+    return;
+  }
   // Added a delay on when the sensors start working because without, the wheel turns automatically for some reason
   static bool sensorsStart = false;
   if (!sensorsStart) {
