@@ -13,7 +13,7 @@ moduleName = "pythonModule"
 # NAO_IP = "192.168.1.126"  # Replace here with your NaoQi's IP address. (This is bender)
 # NAO_IP = "192.168.1.107"  # Replace here with your NaoQi's IP address. (This is peanut)
 NAO_IP = "192.168.1.135"  # Replace here with your NaoQi's IP address. (This is petrie)
-PC_IP = "192.168.1.149"   # Replace here with your computer IP address
+PC_IP = "192.168.1.130"   # Replace here with your computer IP address
 PORT = 9559
 
 
@@ -41,7 +41,7 @@ class myModule(ALModule):
         label = value[1][0][0][0]
         if label != self.last_label:  # Check if label has changed
             self.is_speaking = True  # Set the flag to True before calling tts.say
-            tts.say("I see a " + label)
+            tts.say(label)
             self.is_speaking = False  # Set the flag back to False after tts.say has finished
             self.last_label = label  # Update last_label
 
