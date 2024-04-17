@@ -81,7 +81,7 @@ class Car:
         y = int(self.center[1] + math.sin(math.radians(360 - (self.angle + degree))) * radar_length)
 
         # While We Don't Hit BORDER_COLOR AND length < 300 (just a max) -> go further and further
-        while not game_map.get_at((x, y)) == BORDER_COLOR and radar_length < 300:
+        while not game_map.get_at((x, y)) == BORDER_COLOR and radar_length < 400:
             radar_length = radar_length + 1
             x = int(self.center[0] + math.cos(math.radians(360 - (self.angle + degree))) * radar_length)
             y = int(self.center[1] + math.sin(math.radians(360 - (self.angle + degree))) * radar_length)
@@ -138,7 +138,7 @@ class Car:
         radars = self.radars
         return_values = [0, 0, 0, 0, 0]
         for i, radar in enumerate(radars):
-            return_values[i] = int(radar[1] / 30)
+            return_values[i] = int(radar[1])
 
         return return_values
 

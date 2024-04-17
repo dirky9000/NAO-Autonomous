@@ -6,3 +6,8 @@
 # pip install -r requirements.txt
 pygame
 neat-python
+micromlgen
+numpy
+pandas
+scikit-learn
+matplotlib

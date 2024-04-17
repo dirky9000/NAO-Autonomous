@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\swain\Documents\TCNJ\SeniorProject\NAO-Autonomous-Vehicle\src\pygame-car-simulation\.venv
+set VIRTUAL_ENV=C:\Users\swain\Documents\TCNJ\SeniorProject\git\NAO-Autonomous-Vehicle\src\pygame-car-simulation\.venv
 
 if not defined PROMPT set PROMPT=$P$G
 
