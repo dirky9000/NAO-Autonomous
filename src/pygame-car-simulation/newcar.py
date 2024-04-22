@@ -162,7 +162,8 @@ class Car:
 
 
 def run_simulation(genomes, config):
-    
+    global current_generation
+
     # Empty Collections For Nets and Cars
     nets = []
     cars = []
@@ -185,8 +186,6 @@ def run_simulation(genomes, config):
     generation_font = pygame.font.SysFont("Arial", 30)
     alive_font = pygame.font.SysFont("Arial", 20)
     game_map = pygame.image.load('Armstrong.png').convert() # Convert Speeds Up A Lot
-
-    global current_generation
     
     # Simple Counter To Roughly Limit Time (Not Good Practice)
     counter = 0
@@ -209,7 +208,8 @@ def run_simulation(genomes, config):
             output = nets[i].activate(car_data)
             choice = output.index(max(output))
 
-            subdirectory = fr"csv_outputs\{formatted_time}\generation_{current_generation}"
+            #subdirectory = fr"csv_outputs\{formatted_time}\generation_{current_generation}"
+            subdirectory = os.path.join('csv_outputs', f'{formatted_time}', f'generation_{current_generation}')
             
             try:
                 os.makedirs(subdirectory)
@@ -275,6 +275,8 @@ def run_simulation(genomes, config):
 
         pygame.display.flip()
         clock.tick(60) # 60 FPS
+
+    current_generation = current_generation + 1
 
 if __name__ == "__main__":
     

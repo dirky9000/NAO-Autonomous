@@ -71,6 +71,3 @@ print("Classes: " + str(label_encoder.classes_))
 target_names=list(map(str, class_names))
 report = classification_report(y_test, y_pred, target_names=target_names, zero_division=0, labels=[0, 1, 2, 3])
 print('Classification Report:\n', report)
-
-arduino_code = open("arduino_random_forest.c", mode="w+")
-arduino_code.write(port(clf))
