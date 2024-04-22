@@ -1,5 +1,5 @@
 // Motor  connections
-int enA = 7;
+int enA = 6;
 int in1 = 52;
 int in2 = 53;
 // out1 -> purple connection on motor
@@ -15,6 +15,7 @@ void setup() {
   // Turn off motors - Initial state
   digitalWrite(in1, LOW);
   digitalWrite(in2, LOW);
+  digitalWrite(enA, LOW);
 }
 
 void loop() {
@@ -28,7 +29,7 @@ void loop() {
 void driveForward() {
   // Set motor to half speed
   // For PWM maximum possible values are 0 to 255
-  analogWrite(enA, 20);
+  analogWrite(enA, 192);
 
   // Drive forwards for 3 seconds
   digitalWrite(in1, HIGH);
