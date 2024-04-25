@@ -1,5 +1,5 @@
 // Motor  connections
-int enA = 6;
+int enA = 13;
 int in1 = 52;
 int in2 = 53;
 // out1 -> purple connection on motor
@@ -29,7 +29,7 @@ void loop() {
 void driveForward() {
   // Set motor to half speed
   // For PWM maximum possible values are 0 to 255
-  analogWrite(enA, 192);
+  analogWrite(enA, 190);
 
   // Drive forwards for 3 seconds
   digitalWrite(in1, HIGH);

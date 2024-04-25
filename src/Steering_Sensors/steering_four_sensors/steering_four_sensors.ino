@@ -22,9 +22,9 @@
 #define trigPin6 22 // Sensor 6 trig pin
 #define echoPin6 23 // Sensor 6 echo pin
 
-#define desiredMeasurementSensor5 50
-#define tolerance 10
-#define infLoop 150
+#define desiredMeasurementSensor5 25
+#define tolerance 5
+#define infLoop 50
 
 int stepCount = 0; // Keeps track of steps taken 
 bool isTurningLeft = false; // Specifies if wheel is currently turning
@@ -39,7 +39,7 @@ bool started = false;
 bool running = true;
 
 // Motor  connections
-int enA = 7;
+int enA = 13;
 int in1 = 52;
 int in2 = 53;
 
@@ -49,7 +49,7 @@ void setSpeed(int speed){
 
 // Allows car to drive forward 
 void driveForward() {
-  setSpeed(32);
+  setSpeed(215);
   digitalWrite(in1, HIGH);
   digitalWrite(in2, LOW);
 }
@@ -362,5 +362,5 @@ void loop() {
   }
   
   driveForward();
-  delay(500);
+  delay(250);
 }
