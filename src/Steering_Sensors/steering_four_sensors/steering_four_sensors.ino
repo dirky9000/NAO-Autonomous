@@ -23,7 +23,7 @@
 #define echoPin6 23 // Sensor 6 echo pin
 
 #define desiredMeasurementSensor5 25
-#define tolerance 5
+#define tolerance 7
 #define infLoop 50
 
 int stepCount = 0; // Keeps track of steps taken 
@@ -49,7 +49,7 @@ void setSpeed(int speed){
 
 // Allows car to drive forward 
 void driveForward() {
-  setSpeed(215);
+  setSpeed(254);
   digitalWrite(in1, HIGH);
   digitalWrite(in2, LOW);
 }
