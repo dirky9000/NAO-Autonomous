@@ -121,7 +121,7 @@ void aroundObstacle(float distance2, float distance3, float distance5) {
     digitalWrite(DIR, HIGH); // Set direction to go left
 
     // higher the number = higher the angle 
-    while (stepCount <= 250) {
+    while (stepCount <= 260) {
         makeTurn();
         stepCount++;
     }
@@ -190,31 +190,36 @@ void intoHallway(float distance2, float distance3, float distance5) {
   // Allows car to make right turns into hallways (Sensor 3: Front Right)
   if (distance3 > 600) { 
     stepCount = 0;
+    driveForward();
 
     digitalWrite(DIR, LOW); // Set direction to go right
 
     // higher the number = higher the angle
-    while (stepCount <= 340) { 
+    while (stepCount <= 500) { 
         makeTurn();
+        driveForward();
         stepCount++;
     }
 
-    delay(2500);
+    driveForward();
+    delay(1000);
+    driveForward(); 
 
     digitalWrite(DIR, HIGH); // Set direction to go back to middle after right turn 
 
     // Begin loop until it reaches the middle
     for (int i = 0; i <= stepCount; i++) {
       makeTurn();
+      driveForward();
     }
-
+    driveForward();
     stepCount = 0;
   }
 }
 
 // Main loop function runs repeatedly
 void loop() {  
-  
+  /*
   // Program starts once NAO sends 'b' to arduino
   if (!started) {
     while (!Serial.available() || Serial.read() != 'b') {
@@ -234,7 +239,7 @@ void loop() {
   if (!running) {
     return;
   }
-  
+  */
   // Added a delay on when the sensors start working because without, the wheel turns automatically for some reason
   static bool sensorsStart = false;
   if (!sensorsStart) {
