@@ -189,7 +189,7 @@ class MyClass(GeneratedClass):
         try:
             self.ser.open()
             self.log("Serial port opened.")
-            self.sendString("Hello, my name is Petrie. Tap the front of my head to start the car. Tap the back of my head to stop the car")
+            self.sendString("Hello. My name is Petrie. Tap the front of my head to start the car")
         except Exception as e:
             self.sendString("We found an exception!")
             self.log("Exception on start: " + str(e))
