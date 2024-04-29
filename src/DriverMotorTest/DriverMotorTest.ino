@@ -29,7 +29,7 @@ void loop() {
 void driveForward() {
   // Set motor to half speed
   // For PWM maximum possible values are 0 to 255
-  analogWrite(enA, 190);
+  analogWrite(enA, 254);
 
   // Drive forwards for 3 seconds
   digitalWrite(in1, HIGH);

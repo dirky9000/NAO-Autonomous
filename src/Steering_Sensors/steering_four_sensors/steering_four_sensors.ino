@@ -23,7 +23,7 @@
 #define echoPin6 23 // Sensor 6 echo pin
 
 #define desiredMeasurementSensor5 25
-#define tolerance 7
+#define tolerance 10
 #define infLoop 50
 
 int stepCount = 0; // Keeps track of steps taken 
@@ -39,7 +39,7 @@ bool started = false;
 bool running = true;
 
 // Motor  connections
-int enA = 13;
+int enA = 12;
 int in1 = 52;
 int in2 = 53;
 
@@ -49,7 +49,7 @@ void setSpeed(int speed){
 
 // Allows car to drive forward 
 void driveForward() {
-  setSpeed(254);
+  setSpeed(255);
   digitalWrite(in1, HIGH);
   digitalWrite(in2, LOW);
 }
@@ -219,7 +219,7 @@ void intoHallway(float distance2, float distance3, float distance5) {
 
 // Main loop function runs repeatedly
 void loop() {  
-  /*
+  
   // Program starts once NAO sends 'b' to arduino
   if (!started) {
     while (!Serial.available() || Serial.read() != 'b') {
@@ -234,12 +234,12 @@ void loop() {
       running = false;  // Set running to false when 'g' is received
     }
   }
-
+  
   // If the program is not supposed to be running, skip the rest of the loop
   if (!running) {
     return;
   }
-  */
+  
   // Added a delay on when the sensors start working because without, the wheel turns automatically for some reason
   static bool sensorsStart = false;
   if (!sensorsStart) {
