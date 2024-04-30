@@ -32,7 +32,7 @@ try:
                         print("Announced room:           {}\n".format(rooms[mark_id]))
                     else:
                         continue
-            time.sleep(0.5)
+            time.sleep(2)
     except KeyboardInterrupt:
         print("...Stopping continuous detection...")
 

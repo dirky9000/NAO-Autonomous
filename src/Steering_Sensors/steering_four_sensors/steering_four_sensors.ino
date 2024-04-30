@@ -23,7 +23,7 @@
 #define echoPin6 23 // Sensor 6 echo pin
 
 #define desiredMeasurementSensor5 25
-#define tolerance 10
+#define tolerance 1000 // usually 10
 #define infLoop 50
 
 int stepCount = 0; // Keeps track of steps taken 
@@ -113,7 +113,7 @@ void makeTurn() {
 void aroundObstacle(float distance2, float distance3, float distance5) {
 
   // If an object is in front of the car, then it makes a left around it (Sensor 2: Front)
-  if ((distance2 < 150) && (!isTurningLeft && !hasTurnedLeft)) { // 150
+  if ((distance2 < 2) && (!isTurningLeft && !hasTurnedLeft)) { // usually 150
     isTurningLeft = true; 
 
     stepCount = 0;
@@ -219,7 +219,7 @@ void intoHallway(float distance2, float distance3, float distance5) {
 
 // Main loop function runs repeatedly
 void loop() {  
-  
+  /*
   // Program starts once NAO sends 'b' to arduino
   if (!started) {
     while (!Serial.available() || Serial.read() != 'b') {
@@ -239,7 +239,7 @@ void loop() {
   if (!running) {
     return;
   }
-  
+  */
   // Added a delay on when the sensors start working because without, the wheel turns automatically for some reason
   static bool sensorsStart = false;
   if (!sensorsStart) {
@@ -367,6 +367,54 @@ void loop() {
     }
   }
   
+  // Check if button right is pushed
+  if (digitalRead(BTNR) == HIGH) {
+    delay(10);
+    stepCount = 0;
+    // define direction after button pushed
+    digitalWrite(DIR, LOW);
+    // stepCount limits turning right
+    while (digitalRead(BTNR) == HIGH) {
+      // Limit right turning distance
+      // do one revolution counterclockwise (LOW)
+      // if stepCount is less than or equal to 100 turn right
+      if (stepCount <= 400) {
+        // do one revolution counterclockwise (LOW)
+        makeTurn();
+        stepCount++;
+      }
+    }
+    // once button is released turn back to center
+    digitalWrite(DIR, HIGH);
+    for (int i = 0; i <= stepCount; i++) {
+      makeTurn();
+    }
+    delay(10);
+  }
+
+  // Check if button left is pushed
+  if (digitalRead(BTNL) == HIGH) {
+    delay(10);
+    stepCount = 0;
+    // define direction after button pushed
+    digitalWrite(DIR, HIGH);
+    // stepCount limits turning left
+    while (digitalRead(BTNL) == HIGH) {
+      // if stepCount is less than or equal to 100 turn left
+      if (stepCount <= 400) {
+        // do one revolution counterclockwise (LOW)
+        makeTurn();
+        stepCount++;
+      }
+    }
+    // once button is released turn back to center
+    digitalWrite(DIR, LOW);
+    for (int i = 0; i <= stepCount; i++) {
+      makeTurn();
+    }
+    delay(10);
+  }
+
   driveForward();
   delay(250);
 }
